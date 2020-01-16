@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'question.dart';
-import 'answer_button.dart';
+import 'quiz.dart';
+import 'result.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,35 +15,57 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var _questionIndex = 0;
-  var _questionList = [
-    'What is your favourite color?',
-    'What is your favourite animal?',
-    'What is your favourie car?'
+  var _totalScore = 0;
+  static const _questions = [
+    {
+      'question': 'What is your favourite color?',
+      'answers': [
+        {'text': 'red', 'score': 5},
+        {'text': 'green', 'score': 3},
+        {'text': 'blue', 'score': 2},
+      ],
+    },
+    {
+      'question': 'What is your favourite animal?',
+      'answers': [
+        {'text': 'cat', 'score': 2},
+        {'text': 'dog', 'score': 5},
+        {'text': 'rabbit', 'score': 3},
+      ],
+    },
+    {
+      'question': 'What is your favourite car?',
+      'answers': [
+        {'text': 'clio', 'score': 1},
+        {'text': 'ferrari', 'score': 3},
+        {'text': 'lamborghini', 'score': 5},
+      ],
+    },
   ];
 
-  void _answerQuestion() {
+  void _answerQuestion(int score) {
+    _totalScore += score;
     setState(() {
       _questionIndex++;
     });
+
     print('Question answered');
+    print(_questionIndex);
   }
 
   Widget build(BuildContext context) {
+    var body = _questionIndex < _questions.length
+        ? Quiz(_questions, _questionIndex, _answerQuestion)
+        : Result(_totalScore);
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text('MyApp'),
-          backgroundColor: Color.fromARGB(100, 42, 169, 10),
+          backgroundColor: Colors.blueGrey,
           leading: Icon(Icons.shop),
         ),
-        body: Column(
-          children: <Widget>[
-            Question('${_questionList[_questionIndex]}'),
-            AnswerButton('Answer1', _answerQuestion),
-            AnswerButton('Answer2', _answerQuestion),
-            AnswerButton('Answer3', _answerQuestion),
-          ],
-        ),
+        body: body,
       ),
     );
   }
